@@ -49,7 +49,7 @@ export default function Notes() {
         </Card>
       ) : (
       
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Left — Note List */}
           <div className="col-span-1 flex flex-col gap-2">

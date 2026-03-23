@@ -10,7 +10,7 @@ export default function App() {
   return (
     <div className="flex bg-slate-50 min-h-screen">
       <Sidebar />
-      <main className="ml-60 flex-1 p-8">
+      <main className="flex-1 p-4 pt-16 lg:pt-8 lg:p-8 lg:ml-60">
         <Routes>
           <Route path="/"         element={<Dashboard />} />
           <Route path="/targets"  element={<Targets />} />

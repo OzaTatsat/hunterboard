@@ -41,8 +41,7 @@ export default function Earnings() {
   return (
     <PageWrapper title="Earnings" description="Track every bounty payout you've received">
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <Card className="flex items-center gap-4">
           <div className="bg-green-50 text-green-500 p-3 rounded-xl">
             <DollarSign size={20} />
@@ -74,7 +73,6 @@ export default function Earnings() {
         </Card>
       </div>
 
-      {/* Chart */}
       {chartData.length > 0 && (
         <Card className="mb-8">
           <div className="mb-6">
@@ -96,7 +94,6 @@ export default function Earnings() {
         </Card>
       )}
 
-      {/* Table Header */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-slate-500">{count} payouts logged</p>
         <Button onClick={() => setShowModal(true)}>
@@ -104,49 +101,49 @@ export default function Earnings() {
         </Button>
       </div>
 
-      {/* Table */}
       <Card className="p-0 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-slate-100 bg-slate-50">
-              {['Title', 'Amount', 'Platform', 'Severity', 'Date'].map((col) => (
-                <th key={col} className="text-left px-5 py-3 text-xs font-medium text-slate-400 uppercase tracking-wide">
-                  {col}
-                </th>
-              ))}
-              <th className="px-5 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {earnings.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="text-center py-12 text-slate-400 text-sm">
-                  No payouts yet. Go get that bag! 💰
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50">
+                {['Title', 'Amount', 'Platform', 'Severity', 'Date'].map((col) => (
+                  <th key={col} className="text-left px-5 py-3 text-xs font-medium text-slate-400 uppercase tracking-wide">
+                    {col}
+                  </th>
+                ))}
+                <th className="px-5 py-3" />
               </tr>
-            ) : (
-              earnings.map((e) => (
-                <tr key={e.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition">
-                  <td className="px-5 py-4 font-medium text-slate-800">{e.title}</td>
-                  <td className="px-5 py-4 font-semibold text-green-600">${e.amount.toLocaleString()}</td>
-                  <td className="px-5 py-4 text-slate-500">{e.platform}</td>
-                  <td className="px-5 py-4"><Badge label={e.severity} type={e.severity} /></td>
-                  <td className="px-5 py-4 text-slate-400">{new Date(e.id).toLocaleDateString()}</td>
-                  <td className="px-5 py-4">
-                    <button onClick={() => handleDelete(e.id)} className="text-slate-300 hover:text-red-400 transition">
-                      <Trash2 size={16} />
-                    </button>
+            </thead>
+            <tbody>
+              {earnings.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-12 text-slate-400 text-sm">
+                    No payouts yet. Go get that bag! 💰
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                earnings.map((e) => (
+                  <tr key={e.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition">
+                    <td className="px-5 py-4 font-medium text-slate-800">{e.title}</td>
+                    <td className="px-5 py-4 font-semibold text-green-600">${e.amount.toLocaleString()}</td>
+                    <td className="px-5 py-4 text-slate-500">{e.platform}</td>
+                    <td className="px-5 py-4"><Badge label={e.severity} type={e.severity} /></td>
+                    <td className="px-5 py-4 text-slate-400">{new Date(e.id).toLocaleDateString()}</td>
+                    <td className="px-5 py-4">
+                      <button onClick={() => handleDelete(e.id)} className="text-slate-300 hover:text-red-400 transition">
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </Card>
 
-      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold text-slate-900 mb-5">Add Payout</h3>
             <div className="flex flex-col gap-4">

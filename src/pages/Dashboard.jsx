@@ -55,13 +55,13 @@ export default function Dashboard() {
   return (
     <PageWrapper title="Dashboard" description="Welcome back, Hunter 👋">
 
-      <div className="grid grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="col-span-2">
           <EarningsChart />
         </div>
