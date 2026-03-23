@@ -4,7 +4,7 @@ import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Badge from '../components/ui/Badge'
 import useLocalStorage from '../hooks/useLocalStorage'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Globe } from 'lucide-react'
 
 const statusOptions = ['Active', 'Paused', 'Completed']
 const emptyForm = { domain: '', status: 'Active', notes: '' }
@@ -31,13 +31,47 @@ export default function Targets() {
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-slate-500">{targets.length} targets tracked</p>
         <Button onClick={() => setShowModal(true)}>
-          <span className="flex items-center gap-2">
-            <Plus size={16} /> Add Target
-          </span>
+          <span className="flex items-center gap-2"><Plus size={16} /> Add Target</span>
         </Button>
       </div>
 
-      <Card className="p-0 overflow-hidden">
+      {/* Mobile Cards */}
+      <div className="flex flex-col gap-3 lg:hidden">
+        {targets.length === 0 ? (
+          <Card className="text-center py-12 text-slate-400 text-sm">
+            No targets yet. Add your first one ☝️
+          </Card>
+        ) : (
+          targets.map((target) => (
+            <Card key={target.id}>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="bg-indigo-50 text-indigo-500 p-2 rounded-lg">
+                    <Globe size={16} />
+                  </div>
+                  <p className="font-medium text-slate-800">{target.domain}</p>
+                </div>
+                <button onClick={() => handleDelete(target.id)} className="text-slate-300 hover:text-red-400 transition">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <Badge
+                  label={target.status}
+                  type={target.status === 'Active' ? 'active' : target.status === 'Completed' ? 'resolved' : 'medium'}
+                />
+                <span className="text-xs text-slate-400">{new Date(target.id).toLocaleDateString()}</span>
+              </div>
+              {target.notes && (
+                <p className="text-xs text-slate-400 mt-2 border-t border-slate-100 pt-2">{target.notes}</p>
+              )}
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <Card className="hidden lg:block p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

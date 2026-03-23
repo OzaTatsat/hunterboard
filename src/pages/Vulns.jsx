@@ -4,7 +4,7 @@ import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Badge from '../components/ui/Badge'
 import useLocalStorage from '../hooks/useLocalStorage'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Bug } from 'lucide-react'
 
 const severityOptions = ['low', 'medium', 'high', 'critical']
 const statusOptions   = ['Open', 'Submitted', 'Triaged', 'Resolved']
@@ -32,13 +32,54 @@ export default function Vulns() {
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-slate-500">{vulns.length} vulnerabilities logged</p>
         <Button onClick={() => setShowModal(true)}>
-          <span className="flex items-center gap-2">
-            <Plus size={16} /> Log Vuln
-          </span>
+          <span className="flex items-center gap-2"><Plus size={16} /> Log Vuln</span>
         </Button>
       </div>
 
-      <Card className="p-0 overflow-hidden">
+      {/* Mobile Cards */}
+      <div className="flex flex-col gap-3 lg:hidden">
+        {vulns.length === 0 ? (
+          <Card className="text-center py-12 text-slate-400 text-sm">
+            No vulnerabilities logged yet. Find some bugs! 🐛
+          </Card>
+        ) : (
+          vulns.map((vuln) => (
+            <Card key={vuln.id}>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="bg-red-50 text-red-400 p-2 rounded-lg">
+                    <Bug size={16} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-800 text-sm">{vuln.title}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{vuln.target || 'No target'}</p>
+                  </div>
+                </div>
+                <button onClick={() => handleDelete(vuln.id)} className="text-slate-300 hover:text-red-400 transition shrink-0">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Badge label={vuln.severity} type={vuln.severity} />
+                  <Badge
+                    label={vuln.status}
+                    type={
+                      vuln.status === 'Resolved'  ? 'resolved' :
+                      vuln.status === 'Triaged'   ? 'medium'   :
+                      vuln.status === 'Submitted' ? 'active'   : 'low'
+                    }
+                  />
+                </div>
+                <span className="text-xs text-slate-400">{new Date(vuln.id).toLocaleDateString()}</span>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <Card className="hidden lg:block p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -62,9 +103,7 @@ export default function Vulns() {
                 vulns.map((vuln) => (
                   <tr key={vuln.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition">
                     <td className="px-5 py-4 font-medium text-slate-800">{vuln.title}</td>
-                    <td className="px-5 py-4">
-                      <Badge label={vuln.severity} type={vuln.severity} />
-                    </td>
+                    <td className="px-5 py-4"><Badge label={vuln.severity} type={vuln.severity} /></td>
                     <td className="px-5 py-4">
                       <Badge
                         label={vuln.status}

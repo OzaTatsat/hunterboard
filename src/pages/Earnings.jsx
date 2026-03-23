@@ -41,31 +41,24 @@ export default function Earnings() {
   return (
     <PageWrapper title="Earnings" description="Track every bounty payout you've received">
 
+      {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
         <Card className="flex items-center gap-4">
-          <div className="bg-green-50 text-green-500 p-3 rounded-xl">
-            <DollarSign size={20} />
-          </div>
+          <div className="bg-green-50 text-green-500 p-3 rounded-xl"><DollarSign size={20} /></div>
           <div>
             <p className="text-xs text-slate-400 mb-0.5">Total Earned</p>
             <p className="text-2xl font-semibold text-slate-900">${total.toLocaleString()}</p>
           </div>
         </Card>
-
         <Card className="flex items-center gap-4">
-          <div className="bg-indigo-50 text-indigo-500 p-3 rounded-xl">
-            <TrendingUp size={20} />
-          </div>
+          <div className="bg-indigo-50 text-indigo-500 p-3 rounded-xl"><TrendingUp size={20} /></div>
           <div>
             <p className="text-xs text-slate-400 mb-0.5">Highest Payout</p>
             <p className="text-2xl font-semibold text-slate-900">${highest.toLocaleString()}</p>
           </div>
         </Card>
-
         <Card className="flex items-center gap-4">
-          <div className="bg-yellow-50 text-yellow-500 p-3 rounded-xl">
-            <Calendar size={20} />
-          </div>
+          <div className="bg-yellow-50 text-yellow-500 p-3 rounded-xl"><Calendar size={20} /></div>
           <div>
             <p className="text-xs text-slate-400 mb-0.5">Total Payouts</p>
             <p className="text-2xl font-semibold text-slate-900">{count}</p>
@@ -73,6 +66,7 @@ export default function Earnings() {
         </Card>
       </div>
 
+      {/* Chart */}
       {chartData.length > 0 && (
         <Card className="mb-8">
           <div className="mb-6">
@@ -101,15 +95,44 @@ export default function Earnings() {
         </Button>
       </div>
 
-      <Card className="p-0 overflow-hidden">
+      {/* Mobile Cards */}
+      <div className="flex flex-col gap-3 lg:hidden">
+        {earnings.length === 0 ? (
+          <Card className="text-center py-12 text-slate-400 text-sm">
+            No payouts yet. Go get that bag! 💰
+          </Card>
+        ) : (
+          earnings.map((e) => (
+            <Card key={e.id}>
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <p className="font-medium text-slate-800 text-sm">{e.title}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{e.platform}</p>
+                </div>
+                <button onClick={() => handleDelete(e.id)} className="text-slate-300 hover:text-red-400 transition">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-base font-semibold text-green-600">${e.amount.toLocaleString()}</span>
+                  <Badge label={e.severity} type={e.severity} />
+                </div>
+                <span className="text-xs text-slate-400">{new Date(e.id).toLocaleDateString()}</span>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <Card className="hidden lg:block p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50">
                 {['Title', 'Amount', 'Platform', 'Severity', 'Date'].map((col) => (
-                  <th key={col} className="text-left px-5 py-3 text-xs font-medium text-slate-400 uppercase tracking-wide">
-                    {col}
-                  </th>
+                  <th key={col} className="text-left px-5 py-3 text-xs font-medium text-slate-400 uppercase tracking-wide">{col}</th>
                 ))}
                 <th className="px-5 py-3" />
               </tr>
@@ -117,9 +140,7 @@ export default function Earnings() {
             <tbody>
               {earnings.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-12 text-slate-400 text-sm">
-                    No payouts yet. Go get that bag! 💰
-                  </td>
+                  <td colSpan={6} className="text-center py-12 text-slate-400 text-sm">No payouts yet. Go get that bag! 💰</td>
                 </tr>
               ) : (
                 earnings.map((e) => (
@@ -149,42 +170,28 @@ export default function Earnings() {
             <div className="flex flex-col gap-4">
               <div>
                 <label className="text-xs font-medium text-slate-500 mb-1 block">Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. XSS on login form"
-                  value={form.title}
+                <input type="text" placeholder="e.g. XSS on login form" value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div>
                 <label className="text-xs font-medium text-slate-500 mb-1 block">Amount ($)</label>
-                <input
-                  type="number"
-                  placeholder="e.g. 500"
-                  value={form.amount}
+                <input type="number" placeholder="e.g. 500" value={form.amount}
                   onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-medium text-slate-500 mb-1 block">Platform</label>
-                  <select
-                    value={form.platform}
-                    onChange={(e) => setForm({ ...form, platform: e.target.value })}
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
+                  <select value={form.platform} onChange={(e) => setForm({ ...form, platform: e.target.value })}
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     {platformOptions.map((p) => <option key={p}>{p}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-slate-500 mb-1 block">Severity</label>
-                  <select
-                    value={form.severity}
-                    onChange={(e) => setForm({ ...form, severity: e.target.value })}
-                    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
+                  <select value={form.severity} onChange={(e) => setForm({ ...form, severity: e.target.value })}
+                    className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     {['low','medium','high','critical'].map((s) => (
                       <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
                     ))}
